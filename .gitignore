@@ -1,0 +1,27 @@
+# Compass / Sass files
+.sass-cache
+
+# OS and Editor files
+.DS_Store
+*.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+.svn
+.idea
+
+# Bower components
+bower_components/
+
+# Node modules
+node_modules/
+npm-debug.log
+
+# Dropbox files that get included
+.dropbox
+/Icon*
+
+# Adobe Asset Files
+*.psd
+*.ai
+*.indd/vendor/

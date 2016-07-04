@@ -1,0 +1,26 @@
+{
+  "name": "scuttle",
+  "version": "0.0.1",
+  "description": "Mermaid-based flow charts and diagrams using the US Draft Web Design Standards",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogeruiz/scuttle.git"
+  },
+  "author": "Roger Steve Ruiz <hi@rog.gr>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rogeruiz/scuttle/issues"
+  },
+  "homepage": "https://github.com/rogeruiz/scuttle#readme",
+  "devDependencies": {
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "gulp": "^3.9.1",
+    "mermaid": "^6.0.0",
+    "node-sass": "^3.8.0"
+  }
+}
