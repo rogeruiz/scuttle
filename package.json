@@ -27,9 +27,11 @@
     "gulp": "^3.9.1",
     "gulp-util": "^3.0.7",
     "mermaid": "^6.0.0",
+    "mustache": "^2.2.1",
     "node-notifier": "^4.6.0",
     "node-sass": "^3.8.0",
     "serve-static": "^1.11.1",
+    "through2": "^2.0.1",
     "uswds": "^0.9.4"
   }
 }

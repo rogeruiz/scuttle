@@ -6,6 +6,8 @@ import fs from 'fs';
 import path from 'path';
 import connect from 'connect';
 import serveStatic from 'serve-static';
+import Mustache from 'mustache';
+import through from 'through2';
 
 /*
  * @name default
@@ -42,7 +44,13 @@ gulp.task( 'javascript', ( done ) => {
  * @param { function } done - Callback that signals the task is complete.
  */
 gulp.task( 'render', [ 'stylesheets', 'javascript' ], ( done ) => {
-  done();
+
+  const htmlTemplate = fs.readFileSync( './source/html/render.html', 'utf-8' );
+
+  return gulp.src( './source/diagrams/**.mmd' )
+    .pipe( renderMermaid( htmlTemplate ) )
+    .pipe( gulp.dest( './public/' ) );
+
 } );
 
 /*
@@ -118,4 +126,46 @@ const logError = ( task, message ) => {
     gutil.colors.red( task ),
     gutil.colors.yellow( message )
   );
+};
+
+/*
+ * @name renderMermaid
+ * @desc Gulp plugin for rendering Mermaid diagrams within a Mustache template
+ * @param { string } template - The Mustache template
+ * @return { stream } - A node stream wrapped in through2
+ */
+const renderMermaid = function ( template ) {
+
+  const PluginError = gutil.PluginError;
+
+  if ( ! template ) {
+    throw new PluginError( 'gulp-render-mermaid', 'Missing a Mustache template.' );
+  }
+
+  template = new Buffer( template );
+
+  return through.obj( function ( file, encoding, callback )  {
+
+    if ( file.isNull() ) {
+      return callback( null, file );
+    }
+
+    let fileName = path.basename( file.path, '.mmd' );
+    logMessage( 'gulp-render-mermaid', `Processing ${ file.path }`);
+
+    if ( file.isBuffer() ) {
+      file.contents = new Buffer( Mustache.render( template.toString(), {
+        'diagram-title': fileName,
+        'diagram-contents': file.contents.toString(),
+      } ) );
+
+      file.path = path.join( path.dirname( file.path ), `${ fileName }.html` );
+    }
+    if ( file.isStream() ) {
+      this.emit( 'error', new PluginError( 'gulp-render-mermaid', 'Streaming not supported' ) );
+      return callback( null, file );
+    }
+
+    callback( null, file );
+  } );
 };
