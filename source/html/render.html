@@ -2,11 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Scuttle Render</title>
+    <title>{{ diagram-title }}</title>
     <link rel="stylesheet" href="render.css">
     <script src="render.js"></script>
   </head>
   <body>
-    <div id="js-stage"></div>
+    <section id="js-stage">
+      {{ diagram-contents }}
+    </section>
   </body>
 </html>
