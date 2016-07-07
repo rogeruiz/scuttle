@@ -101,6 +101,19 @@ const notify = ( title, message ) => {
 };
 
 /*
+ * @name logData
+ * @desc Wrapper for gulp-util for logging task data.
+ * @param { string } task - The name of the task.
+ * @param { string } data - The data for the task.
+ */
+const logData = ( task, data ) => {
+  gutil.log(
+    gutil.colors.cyan( task ),
+    gutil.colors.white( data )
+  );
+};
+
+/*
  * @name logMessage
  * @desc Wrapper for gulp-util for logging task messages.
  * @param { string } task - The name of the task.
