@@ -59,12 +59,12 @@ gulp.task( 'server', [ 'render' ], ( done ) => {
     .use( serveStatic( path.join( __dirname, '/public' ), { fallthrough: false } ) )
     .use( ( error, request, response, next ) => {
       if ( error ) {
-        logError( 'server', `${error.statusCode} ${error.path}` );
+        logError( 'server', `${ error.statusCode } ${ error.path }` );
       }
       next();
     } )
     .listen( port, () => {
-      logMessage( 'server', `Site available at http://localhost:${port}/` );
+      logMessage( 'server', `Site available at http://localhost:${ port }/` );
     } );
 
 } );
@@ -96,7 +96,7 @@ const notify = ( title, message ) => {
  * @name logMessage
  * @desc Wrapper for gulp-util for logging task messages.
  * @param { string } task - The name of the task.
- * @param { string } message - The error message for the task.
+ * @param { string } message - The message for the task.
  */
 const logMessage = ( task, message ) => {
   notify( task, message );
