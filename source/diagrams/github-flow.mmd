@@ -1,0 +1,37 @@
+%% Github flow for `18F/vote-gov`
+
+graph LR
+  subgraph Features Workflow
+    f1(feature branch)
+    f3[open pull request against branch]
+    f4[open pull request against staging]
+    f1 -.-> f4
+    f1 -.-> |additional work on top of feature| f3
+    f3 --> |merge button clicked| f1
+  end
+  subgraph Staging Workflow
+    s1(staging branch)
+    s2((deployment to staging URL))
+    s3[open pull request against production]
+    s1 -.-> s3
+    s3 --> |ci build| s2
+  end
+  subgraph Production Workflow
+    p1(production branch)
+    p2((deployment to production URL))
+    b5 --> |merge button clicked| p1
+    s3 --> |merge button clicked| p1
+    p1 --> |ci build| p2
+  end
+  subgraph Bugs Workflow
+    b1(bug fix branch)
+    b3[open pull request against branch]
+    b4[open pull request against staging]
+    b5[open pull request against production]
+    b1 -.-> b4
+    b1 -.-> b5
+    b1 -.-> |additional work on top of bug fix| b3
+    b3 --> |merge button clicked| b1
+  end
+  f4 --> |merge button clicked| s1
+  b4 --> |merge button clicked| s1

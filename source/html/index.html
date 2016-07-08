@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Available diagrams</title>
+    <link rel="stylesheet" href="render.css">
+  </head>
+  <body>
+    <p>Here are the available diagrams.</p>
+    <ul>
+    {{ #diagram-list }}
+      <li>
+        <a href="{{ href }}">{{ name }}</a>
+      </li>
+    {{ /diagram-list }}
+    </ul>
+  </body>
+</html>
+

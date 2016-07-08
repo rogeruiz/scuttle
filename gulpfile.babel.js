@@ -8,6 +8,11 @@ import connect from 'connect';
 import serveStatic from 'serve-static';
 import Mustache from 'mustache';
 import through from 'through2';
+import browserify from 'browserify';
+import source from 'vinyl-source-stream';
+import buffer from 'vinyl-buffer';
+import babelify from 'babelify';
+import sass from 'gulp-sass';
 
 /*
  * @name default
@@ -18,22 +23,49 @@ gulp.task( 'default', ( done ) => {
   done();
 } );
 
+gulp.task( 'copy:fonts', () => {
+  return gulp.src( './node_modules/uswds/dist/fonts/**/*' )
+    .pipe( gulp.dest( './public/fonts' ) );
+} );
+
 /*
  * @name stylesheets
  * @desc Compiles the Sass files under `source/stylesheets`.
- * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'stylesheets', ( done ) => {
-  done();
+gulp.task( 'stylesheets', [ 'copy:fonts' ], () => {
+
+  return gulp.src( './source/styles/render.scss' )
+    .pipe( sass().on( 'error', sass.logError ) )
+    .pipe( gulp.dest( './public' ) );
+
 } );
 
 /*
  * @name javascript
  * @desc Bundles and transpiles the JavaScript files under `source/javascript`.
- * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'javascript', ( done ) => {
-  done();
+gulp.task( 'javascript', () => {
+
+  const bundler = browserify( {
+    entries: './source/javascript/start.js',
+    debug: false,
+    transform: [
+      [
+        babelify,
+        {
+          presets: [
+            'es2015',
+            'es2016'
+          ],
+        }
+      ],
+    ]
+  } );
+
+  return bundler.bundle()
+    .pipe( source( 'render.js' ) )
+    .pipe( gulp.dest( './public' ) );
+
 } );
 
 /*
@@ -41,9 +73,8 @@ gulp.task( 'javascript', ( done ) => {
  * @desc Creates the final HTML page for rendering the mermaid diagrams.
  * @see { @link stylesheets }
  * @see { @link javascript }
- * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'render', [ 'stylesheets', 'javascript' ], ( done ) => {
+gulp.task( 'render', [ 'stylesheets', 'javascript' ], () => {
 
   const htmlTemplate = fs.readFileSync( './source/html/render.html', 'utf-8' );
 
@@ -54,12 +85,44 @@ gulp.task( 'render', [ 'stylesheets', 'javascript' ], ( done ) => {
 } );
 
 /*
+ * @name render:list
+ * @desc Render a list of all the diagrams available under `source/diagrams`.
+ * @param { function } done - Callback that signals the task is complete.
+ */
+gulp.task( 'render:list', ( done ) => {
+
+  const htmlTemplate = fs.readFileSync( './source/html/index.html', 'utf-8' );
+
+  fs.readdir( './source/diagrams', ( error, files ) => {
+
+    let diagrams = files.map( ( file ) => {
+      return {
+        href: `${ path.basename( file, '.mmd' ) }.html`,
+        name: file,
+      };
+    } );
+
+    var listView = Mustache.render( htmlTemplate, {
+      'diagram-list': diagrams,
+    } );
+
+    fs.writeFile( './public/index.html', listView, ( error ) => {
+      if ( ! error ) {
+        done();
+      }
+    } );
+
+  } );
+
+} );
+
+/*
  * @name server
  * @desc Runs a preview server for local development of mermaid diagrams.
  * @see { @link render }
  * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'server', [ 'render' ], ( done ) => {
+gulp.task( 'server', [ 'render', 'render:list' ], ( done ) => {
 
   var port = 1337;
 
@@ -134,7 +197,6 @@ const logMessage = ( task, message ) => {
  * @param { string } message - The error message for the task.
  */
 const logError = ( task, message ) => {
-  notify( task, message );
   gutil.log(
     gutil.colors.red( task ),
     gutil.colors.yellow( message )
