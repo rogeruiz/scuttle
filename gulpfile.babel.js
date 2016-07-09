@@ -33,7 +33,7 @@ gulp.task( 'default', ( done ) => {
  * @desc Deletes the public directory.
  * @return { stream } - A stream containing the deleted `public/` directory.
  */
-gulp.task( 'clean', () => del( './public' ) );
+gulp.task( 'clean', () => del( 'public' ) );
 
 /*
  * @name copy:fonts
@@ -41,8 +41,8 @@ gulp.task( 'clean', () => del( './public' ) );
  * @return { stream } - A stream of copied font files.
  */
 gulp.task( 'copy:fonts', () => {
-  return gulp.src( './node_modules/uswds/dist/fonts/**/*' )
-    .pipe( gulp.dest( './public/fonts' ) );
+  return gulp.src( 'node_modules/uswds/dist/fonts/**/*' )
+    .pipe( gulp.dest( 'public/fonts' ) );
 } );
 
 /*
@@ -52,9 +52,9 @@ gulp.task( 'copy:fonts', () => {
  */
 gulp.task( 'stylesheets', [ 'copy:fonts' ], () => {
 
-  return gulp.src( './source/styles/render.scss' )
+  return gulp.src( 'source/styles/render.scss' )
     .pipe( sass().on( 'error', sass.logError ) )
-    .pipe( gulp.dest( './public' ) );
+    .pipe( gulp.dest( 'public' ) );
 
 } );
 
@@ -66,7 +66,7 @@ gulp.task( 'stylesheets', [ 'copy:fonts' ], () => {
 gulp.task( 'javascript', () => {
 
   const bundler = browserify( {
-    entries: './source/javascript/start.js',
+    entries: 'source/javascript/start.js',
     debug: false,
     transform: [
       [
@@ -83,7 +83,7 @@ gulp.task( 'javascript', () => {
 
   return bundler.bundle()
     .pipe( source( 'render.js' ) )
-    .pipe( gulp.dest( './public' ) );
+    .pipe( gulp.dest( 'public' ) );
 
 } );
 
@@ -94,13 +94,13 @@ gulp.task( 'javascript', () => {
  * @see { @link javascript }
  * @return { stream } - A stream of rendered diagrams in HTML files.
  */
-gulp.task( 'render', [ 'stylesheets', 'javascript' ], () => {
+gulp.task( 'render', () => {
 
-  const htmlTemplate = fs.readFileSync( './source/html/render.html', 'utf-8' );
+  const htmlTemplate = fs.readFileSync( 'source/html/render.html', 'utf-8' );
 
-  return gulp.src( './source/diagrams/**.mmd' )
+  return gulp.src( 'source/diagrams/**.mmd' )
     .pipe( renderMermaid( htmlTemplate ) )
-    .pipe( gulp.dest( './public/' ) );
+    .pipe( gulp.dest( 'public' ) );
 
 } );
 
@@ -112,9 +112,9 @@ gulp.task( 'render', [ 'stylesheets', 'javascript' ], () => {
  */
 gulp.task( 'render:list', [ 'render' ], ( done ) => {
 
-  const htmlTemplate = fs.readFileSync( './source/html/index.html', 'utf-8' );
+  const htmlTemplate = fs.readFileSync( 'source/html/index.html', 'utf-8' );
 
-  fs.readdir( './source/diagrams', ( error, files ) => {
+  fs.readdir( 'source/diagrams', ( error, files ) => {
 
     let diagrams = files.map( ( file ) => {
       return {
@@ -143,9 +143,24 @@ gulp.task( 'render:list', [ 'render' ], ( done ) => {
  * @see { @link render:list }
  * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'server', [ 'render:list' ], ( done ) => {
+gulp.task( 'server', [ 'stylesheets', 'javascript', 'render:list' ], ( done ) => {
 
   var port = 1337;
+
+  var diagramWatcher = gulp.watch( 'source/diagrams/*.mmd', [ 'render' ] );
+
+  diagramWatcher.on( 'change', ( event ) => {
+    console.log( event.type );
+    if ( 'deleted' === event.type ) {
+      let renderedFileName = `${ path.basename( event.path, '.mmd' ) }.html`;
+      let destFilePath = path.resolve( 'public', renderedFileName);
+      del.sync( destFilePath );
+    }
+  } );
+
+  gulp.watch( 'source/html/*.html', [ 'render:list' ] );
+  gulp.watch( 'source/styles/**/*.scss', [ 'stylesheets' ] );
+  gulp.watch( 'source/javascript/**/*.js', [ 'javascript' ] );
 
   connect()
     .use( serveStatic( path.join( __dirname, '/public' ), { fallthrough: false } ) )
@@ -256,10 +271,11 @@ const logName = ( task, done ) => {
  */
 const renderMermaid = function ( template ) {
 
+  const taskName = 'render-mermaid';
   const PluginError = gutil.PluginError;
 
   if ( ! template ) {
-    throw new PluginError( 'gulp-render-mermaid', 'Missing a Mustache template.' );
+    throw new PluginError( taskName, 'Missing a Mustache template.' );
   }
 
   template = new Buffer( template );
@@ -271,7 +287,7 @@ const renderMermaid = function ( template ) {
     }
 
     let fileName = path.basename( file.path, '.mmd' );
-    logMessage( 'gulp-render-mermaid', `Processing ${ file.path }`);
+    logMessage( taskName, `Processing ${ file.path }`);
 
     if ( file.isBuffer() ) {
       file.contents = new Buffer( Mustache.render( template.toString(), {
@@ -282,7 +298,7 @@ const renderMermaid = function ( template ) {
       file.path = path.join( path.dirname( file.path ), `${ fileName }.html` );
     }
     if ( file.isStream() ) {
-      this.emit( 'error', new PluginError( 'gulp-render-mermaid', 'Streaming not supported' ) );
+      this.emit( 'error', new PluginError( taskName, 'Streaming not supported' ) );
       return callback( null, file );
     }
 
