@@ -2,6 +2,21 @@
 
 ![Scuttle](scuttle.jpg)
 
+```shell
+       ___           ___           ___                                                     ___
+      /\__\         /\__\         /\  \                                                   /\__\
+     /:/ _/_       /:/  /         \:\  \         ___           ___                       /:/ _/_
+    /:/ /\  \     /:/  /           \:\  \       /\__\         /\__\                     /:/ /\__\
+   /:/ /::\  \   /:/  /  ___   ___  \:\  \     /:/  /        /:/  /      ___     ___   /:/ /:/ _/_
+  /:/_/:/\:\__\ /:/__/  /\__\ /\  \  \:\__\   /:/__/        /:/__/      /\  \   /\__\ /:/_/:/ /\__\
+  \:\/:/ /:/  / \:\  \ /:/  / \:\  \ /:/  /  /::\  \       /::\  \      \:\  \ /:/  / \:\/:/ /:/  /
+   \::/ /:/  /   \:\  /:/  /   \:\  /:/  /  /:/\:\  \     /:/\:\  \      \:\  /:/  /   \::/_/:/  /
+    \/_/:/  /     \:\/:/  /     \:\/:/  /   \/__\:\  \    \/__\:\  \      \:\/:/  /     \:\/:/  /
+      /:/  /       \::/  /       \::/  /         \:\__\        \:\__\      \::/  /       \::/  /
+      \/__/         \/__/         \/__/           \/__/         \/__/       \/__/         \/__/
+
+```
+
 This project contains the code to generate `mermaid` flow charts and diagrams
 using the Draft US Web Design Standards.
 
@@ -17,16 +32,4 @@ npm install
 npm start
 ```
 
-Then open http://localhost:1337/
-
-
-### Application Sketch
-
-- `source/diagrams` contains all the mermaid files to render
-- each file is loaded into the `source/render.html` and blocked within a div
-- `mermaid.API` is called to activate each section
-- `click` and `hover` events are set for each part of the diagram, but do
-  nothing but set console messages __todo__
-- `source/stylesheets` files are compiled and saved to `public/render.css`
-- `source/javascript` files are compiled and saved to `public/render.js`
-- once each diagram is loaded into `source/render.html`
+Then open [http://localhost:1337/](http://localhost:1337/)
