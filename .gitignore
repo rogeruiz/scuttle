@@ -10,8 +10,8 @@ Thumbs.db
 .svn
 .idea
 
-# Bower components
-bower_components/
+# Generated public directory
+public/
 
 # Node modules
 node_modules/

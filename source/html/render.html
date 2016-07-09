@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ diagram-title }}</title>
+    <!--<link rel="stylesheet" href="base.css">-->
+    <link rel="stylesheet" href="render.css">
+  </head>
+  <body>
+    <a href="/">Back to diagrams list.</a>
+    <div class="mermaid" id="js-stage">
+      {{ diagram-contents }}
+    </div>
+    <script src="render.js"></script>
+  </body>
+</html>

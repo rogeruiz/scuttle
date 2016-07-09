@@ -2,8 +2,10 @@
   "name": "scuttle",
   "version": "0.0.1",
   "description": "Mermaid-based flow charts and diagrams using the US Draft Web Design Standards",
-  "main": "index.js",
+  "main": "gulpfile.js",
   "scripts": {
+    "prestart": "gulp clean",
+    "start": "gulp server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,10 +19,25 @@
   },
   "homepage": "https://github.com/rogeruiz/scuttle#readme",
   "devDependencies": {
+    "babel-core": "^6.10.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-es2016": "^6.11.0",
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
+    "connect": "^3.4.1",
+    "del": "^2.2.1",
+    "figlet": "^1.1.2",
     "gulp": "^3.9.1",
+    "gulp-sass": "^2.3.2",
+    "gulp-util": "^3.0.7",
     "mermaid": "^6.0.0",
-    "node-sass": "^3.8.0"
+    "mustache": "^2.2.1",
+    "node-notifier": "^4.6.0",
+    "node-sass": "^3.8.0",
+    "serve-static": "^1.11.1",
+    "through2": "^2.0.1",
+    "uswds": "^0.9.4",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   }
 }
