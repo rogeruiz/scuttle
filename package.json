@@ -24,6 +24,7 @@
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "connect": "^3.4.1",
+    "figlet": "^1.1.2",
     "gulp": "^3.9.1",
     "gulp-sass": "^2.3.2",
     "gulp-util": "^3.0.7",

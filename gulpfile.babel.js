@@ -13,6 +13,8 @@ import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import babelify from 'babelify';
 import sass from 'gulp-sass';
+import figlet from 'figlet';
+import pkg from './package';
 
 /*
  * @name default
@@ -20,7 +22,23 @@ import sass from 'gulp-sass';
  * @param { function } done - Callback that signals the task is complete.
  */
 gulp.task( 'default', ( done ) => {
-  done();
+  logData( `v${ pkg.version }`, pkg.name );
+  figlet( pkg.name, {
+    font: `Isometric${ Math.floor( Math.random() * ( 4 - 1 + 1 ) ) + 1 }`,
+    //horizontalLayout: 'fitted',
+    //verticalLayout: 'fitted',
+  }, ( error, data ) => {
+    if ( ! error ) {
+      data.split( '\n' )
+        .forEach( ( line ) => {
+          logData( 'default', line );
+        } );
+      logData( 'default', '' );
+    }
+    logData( 'default', pkg.description );
+    logData( 'default', 'To view available tasks, run \`gulp -T\`' );
+    done();
+  } );
 } );
 
 gulp.task( 'copy:fonts', () => {
