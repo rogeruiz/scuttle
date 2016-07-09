@@ -31,12 +31,14 @@ gulp.task( 'default', ( done ) => {
 /*
  * @name clean
  * @desc Deletes the public directory.
+ * @return { stream } - A stream containing the deleted `public/` directory.
  */
 gulp.task( 'clean', () => del( './public' ) );
 
 /*
  * @name copy:fonts
- * @desc Copies `uswds` fonts statically to public
+ * @desc Copies `uswds` fonts statically to public.
+ * @return { stream } - A stream of copied font files.
  */
 gulp.task( 'copy:fonts', () => {
   return gulp.src( './node_modules/uswds/dist/fonts/**/*' )
@@ -46,6 +48,7 @@ gulp.task( 'copy:fonts', () => {
 /*
  * @name stylesheets
  * @desc Compiles the Sass files under `source/stylesheets`.
+ * @return { stream } - A stream of compiled CSS files.
  */
 gulp.task( 'stylesheets', [ 'copy:fonts' ], () => {
 
@@ -58,6 +61,7 @@ gulp.task( 'stylesheets', [ 'copy:fonts' ], () => {
 /*
  * @name javascript
  * @desc Bundles and transpiles the JavaScript files under `source/javascript`.
+ * @return { stream } - A stream of bundled JavaScript files.
  */
 gulp.task( 'javascript', () => {
 
@@ -88,6 +92,7 @@ gulp.task( 'javascript', () => {
  * @desc Creates the final HTML page for rendering the mermaid diagrams.
  * @see { @link stylesheets }
  * @see { @link javascript }
+ * @return { stream } - A stream of rendered diagrams in HTML files.
  */
 gulp.task( 'render', [ 'stylesheets', 'javascript' ], () => {
 
@@ -102,6 +107,7 @@ gulp.task( 'render', [ 'stylesheets', 'javascript' ], () => {
 /*
  * @name render:list
  * @desc Render a list of all the diagrams available under `source/diagrams`.
+ * @see { @link render }
  * @param { function } done - Callback that signals the task is complete.
  */
 gulp.task( 'render:list', [ 'render' ], ( done ) => {
@@ -134,7 +140,7 @@ gulp.task( 'render:list', [ 'render' ], ( done ) => {
 /*
  * @name server
  * @desc Runs a preview server for local development of mermaid diagrams.
- * @see { @link render }
+ * @see { @link render:list }
  * @param { function } done - Callback that signals the task is complete.
  */
 gulp.task( 'server', [ 'render:list' ], ( done ) => {
@@ -165,7 +171,7 @@ gulp.task( 'export', ( done ) => { done(); } );
 
 /*
  * @name notify
- * @desc Wrapper around node-notify
+ * @desc Wrapper around node-notify.
  * @see { @link logError }
  * @see { @link logMessage }
  * @param { string } title - The title of the notification.
@@ -244,9 +250,9 @@ const logName = ( task, done ) => {
 
 /*
  * @name renderMermaid
- * @desc Gulp plugin for rendering Mermaid diagrams within a Mustache template
- * @param { string } template - The Mustache template
- * @return { stream } - A node stream wrapped in through2
+ * @desc Gulp plugin for rendering Mermaid diagrams within a Mustache template.
+ * @param { string } template - The Mustache template.
+ * @return { stream } - A node stream wrapped in through2.
  */
 const renderMermaid = function ( template ) {
 
