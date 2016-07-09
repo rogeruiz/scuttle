@@ -13,6 +13,7 @@ import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import babelify from 'babelify';
 import sass from 'gulp-sass';
+import del from 'del';
 import figlet from 'figlet';
 import pkg from './package';
 
@@ -41,6 +42,16 @@ gulp.task( 'default', ( done ) => {
   } );
 } );
 
+/*
+ * @name clean
+ * @desc Deletes the public directory.
+ */
+gulp.task( 'clean', () => del( './public' ) );
+
+/*
+ * @name copy:fonts
+ * @desc Copies `uswds` fonts statically to public
+ */
 gulp.task( 'copy:fonts', () => {
   return gulp.src( './node_modules/uswds/dist/fonts/**/*' )
     .pipe( gulp.dest( './public/fonts' ) );
@@ -107,7 +118,7 @@ gulp.task( 'render', [ 'stylesheets', 'javascript' ], () => {
  * @desc Render a list of all the diagrams available under `source/diagrams`.
  * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'render:list', ( done ) => {
+gulp.task( 'render:list', [ 'render' ], ( done ) => {
 
   const htmlTemplate = fs.readFileSync( './source/html/index.html', 'utf-8' );
 
@@ -140,7 +151,7 @@ gulp.task( 'render:list', ( done ) => {
  * @see { @link render }
  * @param { function } done - Callback that signals the task is complete.
  */
-gulp.task( 'server', [ 'render', 'render:list' ], ( done ) => {
+gulp.task( 'server', [ 'render:list' ], ( done ) => {
 
   var port = 1337;
 

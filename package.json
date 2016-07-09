@@ -4,6 +4,7 @@
   "description": "Mermaid-based flow charts and diagrams using the US Draft Web Design Standards",
   "main": "gulpfile.js",
   "scripts": {
+    "prestart": "gulp clean",
     "start": "gulp server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,6 +25,7 @@
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "connect": "^3.4.1",
+    "del": "^2.2.1",
     "figlet": "^1.1.2",
     "gulp": "^3.9.1",
     "gulp-sass": "^2.3.2",
