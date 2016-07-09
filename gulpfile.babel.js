@@ -24,22 +24,8 @@ import pkg from './package';
  */
 gulp.task( 'default', ( done ) => {
   logData( `v${ pkg.version }`, pkg.name );
-  figlet( pkg.name, {
-    font: `Isometric${ Math.floor( Math.random() * ( 4 - 1 + 1 ) ) + 1 }`,
-    //horizontalLayout: 'fitted',
-    //verticalLayout: 'fitted',
-  }, ( error, data ) => {
-    if ( ! error ) {
-      data.split( '\n' )
-        .forEach( ( line ) => {
-          logData( 'default', line );
-        } );
-      logData( 'default', '' );
-    }
-    logData( 'default', pkg.description );
-    logData( 'default', 'To view available tasks, run \`gulp -T\`' );
-    done();
-  } );
+  logData( 'default', pkg.description );
+  logName( 'default', done );
 } );
 
 /*
@@ -164,6 +150,7 @@ gulp.task( 'server', [ 'render:list' ], ( done ) => {
       next();
     } )
     .listen( port, () => {
+      logName( 'server' );
       logMessage( 'server', `Site available at http://localhost:${ port }/` );
     } );
 
@@ -230,6 +217,29 @@ const logError = ( task, message ) => {
     gutil.colors.red( task ),
     gutil.colors.yellow( message )
   );
+};
+
+/*
+ * @name logName
+ * @desc Display the name of the project.
+ * @param { string } task - The name of the task.
+ * @param { function } done - A callback to run.
+ */
+const logName = ( task, done ) => {
+  figlet( pkg.name, {
+    font: `Isometric${ Math.floor( Math.random() * ( 4 - 1 + 1 ) ) + 1 }`,
+  }, ( error, data ) => {
+    if ( ! error ) {
+      data.split( '\n' )
+        .forEach( ( line ) => {
+          logData( task, line );
+        } );
+      logData( task, '' );
+    }
+    if ( 'function' === typeof done ) {
+      done();
+    }
+  } );
 };
 
 /*
