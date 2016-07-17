@@ -2,7 +2,46 @@
 @import '../../node_modules/uswds/src/stylesheets/all';
 @import './mermaid';
 
-body {
-  // background-color: #f05;
-  // color: #fff;
+.mermaid {
+
+  .label {
+    color: $color-white;
+    font-size: 1rem;
+    overflow-wrap: break-word;
+    word-break: break-all;
+
+  }
+
+}
+
+.cluster {
+
+  rect {
+    fill: $color-gray-lightest !important;
+    stroke: $color-gray-lighter !important;
+  }
+
+  text {
+    @include h4;
+  }
+
+}
+
+.node rect,
+.node circle,
+.node ellipse,
+.node polygon {
+  fill: $color-primary;
+  stroke: $color-secondary-light;
+  stroke-width: 1px;
+}
+
+.edgePath .path {
+  stroke: $color-gray-medium !important;
+  stroke-width: 2px !important;
+}
+
+.edgeLabel {
+  background-color: $color-gray-cool-light;
+  color: $color-black;
 }
