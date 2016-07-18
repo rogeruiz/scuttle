@@ -1,6 +1,27 @@
-%% Example code
-graph TD;
-  A --> B;
-  A --> C;
-  B --> D;
-  C --> E;
+%% Example of sequence diagram
+sequenceDiagram
+  participant Feature
+  participant Updates
+  participant Staging
+  participant Releases
+  participant Master
+
+  Note over Feature, Staging: Deploys to staging URL on merge
+
+  Feature ->> Staging: Open a pull request
+  Staging -->> Feature: Delete feature branch
+
+  Note over Feature, Staging: If large changes need to occur on a feature, don't just add commits to the original branch. Open an update feature branch and merge it into the feature. This way updates and or features don't balloon to large commit sizes without verifying updates in between.
+  loop Changes to feature
+    Updates -->> Feature: Open a pull request
+    Feature -->> Updates: Delete update branch
+  end
+
+  Note over Staging, Releases: Deploys to releases URL on merge
+  Staging ->> Releases: Open a pull request
+
+  Note over Releases, Master: Deploys to production URL on merge
+  Releases ->> Master: Open a pull request
+
+  Master ->> Staging: Open a pull request
+  Note over Master, Staging: Sync back changes for version numbers or fixes

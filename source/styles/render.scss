@@ -2,7 +2,131 @@
 @import '../../node_modules/uswds/src/stylesheets/all';
 @import './mermaid';
 
-body {
-  // background-color: #f05;
-  // color: #fff;
+.mermaid {
+
+  font-family: $font-sans;
+
+  .label {
+    color: $color-white;
+    font-size: 1rem;
+    overflow-wrap: break-word;
+    word-break: break-all;
+
+  }
+
+}
+
+.cluster {
+
+  rect {
+    fill: $color-gray-lightest !important;
+    stroke: $color-gray-lighter !important;
+  }
+
+  text {
+    @include h4;
+  }
+
+}
+
+.node rect,
+.node circle,
+.node ellipse,
+.node polygon {
+  fill: $color-primary;
+  stroke: $color-primary-darkest;
+  stroke-width: 2px;
+}
+
+.edgePath .path {
+  stroke: $color-primary-darkest !important;
+  stroke-width: 2px !important;
+}
+
+.edgePath marker path {
+  fill: $color-primary-darkest !important;
+}
+
+.edgeLabel {
+  background-color: $color-gray-cool-light;
+  color: $color-black;
+}
+
+rect {
+
+  &.note,
+  &.labelBox {
+
+    fill: $color-primary-alt-lightest;
+    stroke: $color-gray-cool-light;
+    stroke-width: 2px;
+
+  }
+
+  &.actor {
+
+    fill: $color-primary;
+    stroke: $color-primary-darkest;
+    stroke-width: 2px;
+
+  }
+
+}
+
+#crosshead,
+#arrowhead{
+
+  path {
+
+    fill: $color-primary-darkest;
+
+  }
+
+}
+
+line {
+
+  &[class^=messageLine],
+  &.actor-line {
+
+    fill: $color-primary-darkest;
+    stroke: $color-primary-darkest;
+    stroke-width: 2px;
+
+  }
+
+  &.loopLine {
+
+    fill: $color-primary-alt-lightest;
+    stroke: $color-gray-cool-light;
+    stroke-width: 2px;
+
+  }
+
+}
+
+text {
+
+  &.messageText {
+
+    @include h6;
+    fill: $color-primary-alt-darkest;
+
+  }
+
+  &.actor {
+    fill: $color-white;
+  }
+
+  &.noteText,
+  &.labelText {
+    fill: $color-primary;
+  }
+
+  &.loopText {
+    font-family: $font-serif;
+    font-size: 1rem;
+    font-style: oblique;
+  }
+
 }
