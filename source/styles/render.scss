@@ -116,10 +116,10 @@ text {
 
   &.messageText {
 
-    @include h6;
-    font-family: $font-serif;
+    font-family: $monospace;
     text-shadow: 2px 2px 0 $color-white, 1px 1px 0 $color-gray;
     fill: $color-primary-alt-darkest;
+    font-size: 1rem;
 
   }
 
