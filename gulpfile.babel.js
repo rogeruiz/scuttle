@@ -147,7 +147,7 @@ gulp.task( 'server', [ 'stylesheets', 'javascript', 'render:list' ], ( done ) =>
 
   var port = 1337;
 
-  var diagramWatcher = gulp.watch( 'source/diagrams/*.mmd', [ 'render' ] );
+  var diagramWatcher = gulp.watch( 'source/diagrams/*.mmd', [ 'render:list' ] );
 
   diagramWatcher.on( 'change', ( event ) => {
     console.log( event.type );
