@@ -1,0 +1,50 @@
+%% Example of gulp flow
+
+sequenceDiagram
+  participant npm
+  participant gulp
+  participant runner
+
+  npm ->> gulp: npm prestart
+  gulp ->>+ runner: gulp clean
+  runner ->>- gulp: done
+
+  npm ->> gulp: npm start
+
+  gulp ->>+ runner: gulp render:list
+  runner -->> runner: gulp render
+  runner ->>- gulp: done
+
+  gulp ->>+ runner: gulp stylesheets
+  runner -->> runner: gulp copy:fonts
+  runner ->>- gulp: done
+
+  gulp ->>+ runner: gulp javascript
+  runner ->>- gulp: done
+
+  gulp ->> runner: gulp server
+
+  Note over gulp, runner: Site available at https://localhost:1337/;
+
+  loop Watching for changes
+    gulp -->>+ runner: source/diagrams/*.mmd
+    runner -->> runner: gulp render
+    runner -->> runner: gulp render:list
+    runner ->>- gulp: done
+
+    gulp -->>+ runner: source/html/*.html
+    runner -->> runner: gulp render:list
+    runner ->>- gulp: done
+
+    gulp -->>+ runner: source/styles/**/*.scss
+    runner -->> runner: gulp copy:fonts
+    runner -->> runner: gulp stylesheets
+    runner ->>- gulp: done
+
+    gulp -->>+ runner: source/javascript/**/*.js
+    runner -->> runner: gulp javascript
+    runner ->>- gulp: done
+  end
+
+  runner -->> runner: Ctrl + C to end server process
+  runner ->> npm: done

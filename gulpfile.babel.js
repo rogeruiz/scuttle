@@ -16,8 +16,13 @@ import sass from 'gulp-sass';
 import del from 'del';
 import figlet from 'figlet';
 import pkg from './package';
+import browserSync from 'browser-sync';
 
-/*
+// Create browserSync instance
+//
+const browserSyncInstance = browserSync.create();
+
+/**
  * @name default
  * @description The default gulp task.
  * @param { function } done - Callback that signals the task is complete.
@@ -28,14 +33,14 @@ gulp.task( 'default', ( done ) => {
   logName( 'default', done );
 } );
 
-/*
+/**
  * @name clean
  * @desc Deletes the public directory.
  * @return { stream } - A stream containing the deleted `public/` directory.
  */
 gulp.task( 'clean', () => del( 'public' ) );
 
-/*
+/**
  * @name copy:fonts
  * @desc Copies `uswds` fonts statically to public.
  * @return { stream } - A stream of copied font files.
@@ -45,7 +50,7 @@ gulp.task( 'copy:fonts', () => {
     .pipe( gulp.dest( 'public/fonts' ) );
 } );
 
-/*
+/**
  * @name stylesheets
  * @desc Compiles the Sass files under `source/stylesheets`.
  * @return { stream } - A stream of compiled CSS files.
@@ -54,11 +59,12 @@ gulp.task( 'stylesheets', [ 'copy:fonts' ], () => {
 
   return gulp.src( 'source/styles/render.scss' )
     .pipe( sass().on( 'error', sass.logError ) )
-    .pipe( gulp.dest( 'public' ) );
+    .pipe( gulp.dest( 'public' ) )
+    .pipe( browserSyncInstance.stream() );
 
 } );
 
-/*
+/**
  * @name javascript
  * @desc Bundles and transpiles the JavaScript files under `source/javascript`.
  * @return { stream } - A stream of bundled JavaScript files.
@@ -87,7 +93,7 @@ gulp.task( 'javascript', () => {
 
 } );
 
-/*
+/**
  * @name render
  * @desc Creates the final HTML page for rendering the mermaid diagrams.
  * @see { @link stylesheets }
@@ -104,7 +110,7 @@ gulp.task( 'render', () => {
 
 } );
 
-/*
+/**
  * @name render:list
  * @desc Render a list of all the diagrams available under `source/diagrams`.
  * @see { @link render }
@@ -129,6 +135,7 @@ gulp.task( 'render:list', [ 'render' ], ( done ) => {
 
     fs.writeFile( './public/index.html', listView, ( error ) => {
       if ( ! error ) {
+        browserSyncInstance.reload();
         done();
       }
     } );
@@ -137,7 +144,7 @@ gulp.task( 'render:list', [ 'render' ], ( done ) => {
 
 } );
 
-/*
+/**
  * @name server
  * @desc Runs a preview server for local development of mermaid diagrams.
  * @see { @link render:list }
@@ -147,20 +154,23 @@ gulp.task( 'server', [ 'stylesheets', 'javascript', 'render:list' ], ( done ) =>
 
   var port = 1337;
 
-  var diagramWatcher = gulp.watch( 'source/diagrams/*.mmd', [ 'render' ] );
-
-  diagramWatcher.on( 'change', ( event ) => {
-    console.log( event.type );
-    if ( 'deleted' === event.type ) {
-      let renderedFileName = `${ path.basename( event.path, '.mmd' ) }.html`;
-      let destFilePath = path.resolve( 'public', renderedFileName);
-      del.sync( destFilePath );
-    }
+  browserSyncInstance.init( {
+    proxy: `localhost:${ port }`,
   } );
 
+  gulp.watch( 'source/diagrams/*.mmd', [ 'render:list' ] )
+    .on( 'change', ( event ) => {
+      if ( 'deleted' === event.type ) {
+        let renderedFileName = `${ path.basename( event.path, '.mmd' ) }.html`;
+        let destFilePath = path.resolve( 'public', renderedFileName);
+        del.sync( destFilePath );
+      }
+      browserSyncInstance.reload();
+    } );
   gulp.watch( 'source/html/*.html', [ 'render:list' ] );
   gulp.watch( 'source/styles/**/*.scss', [ 'stylesheets' ] );
-  gulp.watch( 'source/javascript/**/*.js', [ 'javascript' ] );
+  gulp.watch( 'source/javascript/**/*.js', [ 'javascript' ] )
+    .on( 'change', browserSyncInstance.reload );
 
   connect()
     .use( serveStatic( path.join( __dirname, '/public' ), { fallthrough: false } ) )
@@ -177,14 +187,14 @@ gulp.task( 'server', [ 'stylesheets', 'javascript', 'render:list' ], ( done ) =>
 
 } );
 
-/*
+/**
  * @name export
  * @desc Exports a PNG using PhantomJS of the mermaid diagrams.
  * @param { function } done - Callback that signals the task is complete.
  */
 gulp.task( 'export', ( done ) => { done(); } );
 
-/*
+/**
  * @name notify
  * @desc Wrapper around node-notify.
  * @see { @link logError }
@@ -200,7 +210,7 @@ const notify = ( title, message ) => {
   } );
 };
 
-/*
+/**
  * @name logData
  * @desc Wrapper for gulp-util for logging task data.
  * @param { string } task - The name of the task.
@@ -213,7 +223,7 @@ const logData = ( task, data ) => {
   );
 };
 
-/*
+/**
  * @name logMessage
  * @desc Wrapper for gulp-util for logging task messages.
  * @param { string } task - The name of the task.
@@ -227,7 +237,7 @@ const logMessage = ( task, message ) => {
   );
 };
 
-/*
+/**
  * @name logError
  * @desc Wrapper for gulp-util for logging task errors.
  * @param { string } task - The name of the task.
@@ -240,7 +250,7 @@ const logError = ( task, message ) => {
   );
 };
 
-/*
+/**
  * @name logName
  * @desc Display the name of the project.
  * @param { string } task - The name of the task.
@@ -263,7 +273,7 @@ const logName = ( task, done ) => {
   } );
 };
 
-/*
+/**
  * @name renderMermaid
  * @desc Gulp plugin for rendering Mermaid diagrams within a Mustache template.
  * @param { string } template - The Mustache template.

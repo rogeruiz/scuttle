@@ -1,6 +1,7 @@
 // Draft US Web Design Standards
 @import '../../node_modules/uswds/src/stylesheets/all';
 @import './mermaid';
+@import './shell';
 
 .mermaid {
 
@@ -54,20 +55,27 @@
 
 rect {
 
-  &.note,
-  &.labelBox {
+  fill: $color-primary;
+  stroke: $color-primary-darkest;
+  stroke-width: 2px;
+
+  &.note {
 
     fill: $color-primary-alt-lightest;
-    stroke: $color-gray-cool-light;
+    stroke: $color-primary-alt-light;
     stroke-width: 2px;
 
+  }
+
+  &.labelBox {
+    fill: $color-primary-darker;
+    stroke: $color-primary;
   }
 
   &.actor {
 
     fill: $color-primary;
     stroke: $color-primary-darkest;
-    stroke-width: 2px;
 
   }
 
@@ -97,8 +105,8 @@ line {
 
   &.loopLine {
 
-    fill: $color-primary-alt-lightest;
-    stroke: $color-gray-cool-light;
+    fill: $color-primary-darkest;
+    stroke: $color-primary;
     stroke-width: 2px;
 
   }
@@ -109,8 +117,10 @@ text {
 
   &.messageText {
 
-    @include h6;
+    font-family: $monospace;
+    text-shadow: 2px 2px 0 $color-white, 1px 1px 0 $color-gray;
     fill: $color-primary-alt-darkest;
+    font-size: 1rem;
 
   }
 
@@ -118,9 +128,16 @@ text {
     fill: $color-white;
   }
 
-  &.noteText,
+  &.noteText {
+    fill: $color-base;
+    font-size: 1.25rem;
+  }
+
   &.labelText {
-    fill: $color-primary;
+    font-family: $font-serif;
+    fill: $color-gray-cool-light;
+    font-size: 1.25rem;
+    text-transform: uppercase;
   }
 
   &.loopText {
