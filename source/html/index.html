@@ -6,14 +6,17 @@
     <link rel="stylesheet" href="render.css">
   </head>
   <body>
-    <p>Here are the available diagrams.</p>
-    <ul>
+    <h1>Scuttle Sequence Diagrams using Mermaid</h1>
+    <h2>Below you will find a list of the available diagrams</h2>
+    <ul class="scuttle-diagram-list">
     {{ #diagram-list }}
-      <li>
-        <a href="{{ href }}">{{ name }}</a>
+      <li class="scuttle-diagram-list__item">
+        <a class="usa-button" href="{{ href }}">{{ name }}</a>
       </li>
     {{ /diagram-list }}
     </ul>
+    <p>Create more diagrams by adding <code>.mmd</code> files to the <code>source/diagrams</code> directory.</p>
+    <p>Styles provided by the <a href="https://github.com/18F/web-design-standards/" rel="noreferrer noopener" target="_blank">Draft US Web Design Standards</a></p>
   </body>
 </html>
 
