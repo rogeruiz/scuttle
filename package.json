@@ -1,6 +1,6 @@
 {
   "name": "scuttle",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Mermaid-based flow charts and diagrams using the US Draft Web Design Standards",
   "main": "gulpfile.js",
   "scripts": {
