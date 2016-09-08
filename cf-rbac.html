@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>cf-rbac</title>
+    <!--<link rel="stylesheet" href="base.css">-->
+    <link rel="stylesheet" href="render.css">
+  </head>
+  <body>
+    <a class="usa-button usa-button-outline" href="http://write.rog.gr/scuttle/">Back to all diagrams</a>
+    <div class="mermaid scuttle-stage" id="js-stage">
+      %% Sequence Diagram for CF RBAC
+
+sequenceDiagram
+  participant Orgs
+  participant Spaces
+  participant Apps
+
+
+  Note over Orgs: An org is a development account that an individual or multiple collaborators can own and use. All collaborators access an org with user accounts. Collaborators in an org share a resource quota plan, applications, services availability, and custom domains.
+
+  Note over Spaces: Every application and service is scoped to a space. Each org contains at least one space. A space provides users with access to a shared location for application development, deployment, and maintenance. Each space role applies only to a particular space.
+
+
+  Note over Orgs: my-agency
+  Orgs -&gt;&gt; Spaces: An org can have multiple spaces
+
+  Note over Spaces: sandbox
+  Spaces -&gt;&gt; Apps: A space can have multiple apps
+  Note over Apps: my-agency-app-1
+  Note over Apps: my-agency-app-2
+
+  Note over Spaces: staging
+  Spaces -&gt;&gt; Apps: A space can have multiple apps
+  Note over Apps: my-agency-app-1
+
+  Note over Spaces: production
+  Spaces -&gt;&gt; Apps: A space can have multiple apps
+  Note over Apps: my-agency-app-1
+
+    </div>
+    <a class="usa-button usa-button-outline" href="http://write.rog.gr/scuttle/">Back to all diagrams</a>
+    <script src="render.js"></script>
+  </body>
+</html>

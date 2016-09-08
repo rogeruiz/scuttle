@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>gulp-flow</title>
+    <!--<link rel="stylesheet" href="base.css">-->
+    <link rel="stylesheet" href="render.css">
+  </head>
+  <body>
+    <a class="usa-button usa-button-outline" href="http://write.rog.gr/scuttle/">Back to all diagrams</a>
+    <div class="mermaid scuttle-stage" id="js-stage">
+      %% Example of gulp flow
+
+sequenceDiagram
+  participant npm
+  participant gulp
+  participant runner
+
+  npm -&gt;&gt; gulp: npm prestart
+  gulp -&gt;&gt;+ runner: gulp clean
+  runner -&gt;&gt;- gulp: done
+
+  npm -&gt;&gt; gulp: npm start
+
+  gulp -&gt;&gt;+ runner: gulp render:list
+  runner --&gt;&gt; runner: gulp render
+  runner -&gt;&gt;- gulp: done
+
+  gulp -&gt;&gt;+ runner: gulp stylesheets
+  runner --&gt;&gt; runner: gulp copy:fonts
+  runner -&gt;&gt;- gulp: done
+
+  gulp -&gt;&gt;+ runner: gulp javascript
+  runner -&gt;&gt;- gulp: done
+
+  gulp -&gt;&gt; runner: gulp server
+
+  Note over gulp, runner: Site available at https:&#x2F;&#x2F;localhost:1337&#x2F;;
+
+  loop Watching for changes
+    gulp --&gt;&gt;+ runner: source&#x2F;diagrams&#x2F;*.mmd
+    runner --&gt;&gt; runner: gulp render
+    runner --&gt;&gt; runner: gulp render:list
+    runner -&gt;&gt;- gulp: done
+
+    gulp --&gt;&gt;+ runner: source&#x2F;html&#x2F;*.html
+    runner --&gt;&gt; runner: gulp render:list
+    runner -&gt;&gt;- gulp: done
+
+    gulp --&gt;&gt;+ runner: source&#x2F;styles&#x2F;**&#x2F;*.scss
+    runner --&gt;&gt; runner: gulp copy:fonts
+    runner --&gt;&gt; runner: gulp stylesheets
+    runner -&gt;&gt;- gulp: done
+
+    gulp --&gt;&gt;+ runner: source&#x2F;javascript&#x2F;**&#x2F;*.js
+    runner --&gt;&gt; runner: gulp javascript
+    runner -&gt;&gt;- gulp: done
+  end
+
+  runner --&gt;&gt; runner: Ctrl + C to end server process
+  runner -&gt;&gt; npm: done
+
+    </div>
+    <a class="usa-button usa-button-outline" href="http://write.rog.gr/scuttle/">Back to all diagrams</a>
+    <script src="render.js"></script>
+  </body>
+</html>

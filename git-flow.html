@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>git-flow</title>
+    <!--<link rel="stylesheet" href="base.css">-->
+    <link rel="stylesheet" href="render.css">
+  </head>
+  <body>
+    <a class="usa-button usa-button-outline" href="http://write.rog.gr/scuttle/">Back to all diagrams</a>
+    <div class="mermaid scuttle-stage" id="js-stage">
+      %% Example of sequence diagram
+sequenceDiagram
+  participant Bugs
+  participant Feature
+  participant Updates
+  participant Staging
+  participant Releases
+  participant Master
+
+  Note over Bugs, Staging: Treat bugs like features and roll them into the following release.
+  Bugs -&gt;&gt;+ Staging: Open a pull request
+  Note left of Staging: Review the changes locally during a pairing session to ensure bug is fixed before merging.
+  Staging --&gt;&gt;- Bugs: Delete bug branch
+  Note over Bugs, Staging: Deploys to staging URL on merge to Staging from Bugs.
+
+  Feature -&gt;&gt;+ Staging: Open a pull request
+  Note left of Staging: Review the changes locally before merging.
+  Staging --&gt;&gt;- Feature: Delete feature branch
+  Note over Feature, Staging: Deploys to staging URL on merge to Staging from Feature.
+
+  loop Updates to Feature
+    Updates -&gt;&gt;+ Feature: Open a pull request
+    Note right of Feature: Review the changes locally before merging.
+    Note right of Updates: If large changes need to occur on a feature, don&#39;t just add commits to the original branch. Open an update feature branch and merge it into the feature. This way updates and or features don&#39;t balloon to large commit sizes without verifying updates in between.
+    Feature --&gt;&gt;- Updates: Delete update branch
+  end
+
+  Note right of Releases: Follow semantic versioning when deploying to Releases. Any breaking changes should bump the major and minor versions respectively.
+
+  Staging -&gt;&gt; Releases: Open a pull request
+  Note over Staging, Releases: Deploys to releases URL on merge to Releases from Staging.
+
+  Releases -&gt;&gt; Master: Open a pull request
+  Note over Releases, Master: Deploys to production URL on merge to Master from Releases.
+
+  Master --&gt;&gt; Staging: Open a pull request
+  Note over Master, Staging: Sync back changes for version numbers or fixes, if necessary.
+
+    </div>
+    <a class="usa-button usa-button-outline" href="http://write.rog.gr/scuttle/">Back to all diagrams</a>
+    <script src="render.js"></script>
+  </body>
+</html>
