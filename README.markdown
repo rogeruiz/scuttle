@@ -17,8 +17,8 @@
 
 ```
 
-This project contains the code to generate `mermaid` flow charts and diagrams
-using the Draft US Web Design Standards.
+This project contains the code to generate [mermaid](http://knsv.github.io/mermaid/) flow charts and diagrams
+using the [Draft US Web Design Standards](https://standards.usa.gov/).
 
 ## Installation
 
