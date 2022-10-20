@@ -1,7 +1,7 @@
 wmt_export_name = $(lastword $(subst /, ,$(CURDIR)))_export
 wmt_render_name = $(lastword $(subst /, ,$(CURDIR)))_render
 
-EXECUTABLES = plantuml watchman docker less
+EXECUTABLES = plantuml watchman docker less rg
 K := $(foreach exec,$(EXECUTABLES),\
         $(if $(shell command -v $(exec)),some string,$(error "No $(exec) executable in PATH")))
 
