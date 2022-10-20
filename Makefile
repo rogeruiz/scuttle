@@ -1,7 +1,7 @@
 wmt_export_name = $(lastword $(subst /, ,$(CURDIR)))_export
 wmt_render_name = $(lastword $(subst /, ,$(CURDIR)))_render
 
-EXECUTABLES = plantuml watchman docker
+EXECUTABLES = plantuml watchman docker less
 K := $(foreach exec,$(EXECUTABLES),\
         $(if $(shell command -v $(exec)),some string,$(error "No $(exec) executable in PATH")))
 
@@ -20,6 +20,10 @@ clean: ## A target to clean things up left behind from `make render`.
 	watchman trigger-del . $(wmt_export_name)
 	watchman trigger-del . $(wmt_render_name)
 	@rm -rvf out/
+
+.PHONY: debug
+debug: ## A target to debug things.
+	@less +F /usr/local/var/run/watchman/$(shell whoami)-state/log
 
 # A target to setup the Watchman trigger in the current directory.
 .PHONY: setup-watchman-trigger
