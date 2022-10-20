@@ -23,5 +23,5 @@ then
     -i \
     --rm \
     -v "${PWD}:/usr/local/structurizr" \
-    structurizr/cli export  -workspace "${incoming_file}" -format "plantuml/structurizr" -output ./out
+    structurizr/cli export  -workspace "${incoming_file}" -format "plantuml" -output ./out
 fi
