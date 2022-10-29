@@ -7,7 +7,9 @@ categories = [
   "c4model",
   "architecture-diagrams",
   "structurizr-build-tool",
+  "diagrams-as-code",
 ]
+keywords = ["cli", "translation", "extractor", "diagrams"]
 license = "GNU AGPLv3"
 authors = ["Roger Steve Ruiz <hi@rog.gr>"]
 version = "2.0.0"
