@@ -1,22 +1,56 @@
-use clap::Parser;
+use std::path::PathBuf;
 
-/// Simple program to greet a person
-#[derive(Parser, Debug)]
+use clap::{Parser, Subcommand};
+
+#[derive(Parser)]
 #[command(author, version, about, long_about = None)]
-struct Args {
-    /// Name of the person to greet
-    #[arg(short, long)]
-    name: String,
+struct Cli {
+    #[command(subcommand)]
+    command: Option<Commands>,
+}
 
-    /// Number of times to greet
-    #[arg(short, long, default_value_t = 1)]
-    count: u8,
+#[derive(Subcommand)]
+enum Commands {
+    /// The export command exports DSL files into PlantUML files using Structurizr-CLI
+    Export {
+        /// Input file path for DSL files
+        #[arg(short, long)]
+        workspace: Option<PathBuf>,
+
+        /// Format that Structurizr-CLI supports
+        #[arg(short, long)]
+        formatter: String,
+
+        /// Output file path for PlantUML files
+        #[arg(short, long)]
+        output: Option<PathBuf>,
+    },
+    /// The render command renders PlantUML files into PNG files using PlantUML CLI
+    Render {
+        /// Format that Structurizr-CLI supports
+        #[arg(short, long)]
+        formatter: String,
+
+        /// Input file path for files
+        #[arg(short, long)]
+        input: Option<PathBuf>,
+    },
 }
 
 fn main() {
-    let args = Args::parse();
+    let cli = Cli::parse();
 
-    for _ in 0..args.count {
-        println!("¡Hola y buenas de Scuttle, {}!", args.name);
+    match cli.command {
+        Some(Commands::Export {
+            workspace,
+            formatter,
+            output,
+        }) => {
+            todo!()
+        }
+        Some(Commands::Render { input, formatter }) => {
+            todo!()
+        }
+        None => {}
     }
 }
