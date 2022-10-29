@@ -13,3 +13,8 @@ out/
 # Dropbox files that get included
 .dropbox
 /Icon*
+
+
+# Added by cargo
+
+/target

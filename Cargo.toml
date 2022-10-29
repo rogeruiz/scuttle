@@ -1,0 +1,18 @@
+[package]
+name = "scuttle"
+description = "An automation translation layer for working with Structurizr DSL"
+repository = "https://github.com/rogeruiz/scuttle"
+categories = [
+  "command-line-interface",
+  "c4model",
+  "architecture-diagrams",
+  "structurizr-build-tool",
+]
+license = "GNU AGPLv3"
+authors = ["Roger Steve Ruiz <hi@rog.gr>"]
+version = "2.0.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
