@@ -1,0 +1,20 @@
+# OS and Editor files
+.DS_Store
+*.DS_Store
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+.svn
+.idea
+
+# Generated out/ directory
+out/
+
+# Dropbox files that get included
+.dropbox
+/Icon*
+
+
+# Added by cargo
+
+/target
