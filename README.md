@@ -38,11 +38,11 @@ diagrams and the Structurizr services such as SaaS and CLI tooling.
 
 ## Contributing
 
-This project is still in high-development. Take a look at Issues to help track
-the work. They should all be labeled with `help wanted` for anything that
-outside folks can contribute to. Also, there's a need for documentation so if
-there's anything that needs to be updated or is confusing or missing, please
-contribute directly back to the documentation.
+This project is still in development. Take a look at Issues to help track the
+work. They should all be labeled with `help wanted` for anything that outside
+folks can contribute to. Also, there's a need for documentation so if there's
+anything that needs to be updated or is confusing or missing, please contribute
+directly back to the documentation.
 
 The branches are well documented but not intuitive. Please read through the
 Issue below for more discussion on this.
