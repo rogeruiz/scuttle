@@ -39,7 +39,7 @@ enum Commands {
         #[arg(short, long)]
         output: Option<PathBuf>,
     },
-    /// The render command renders DSL files into PNG files using a specific formatter
+    /// The render command renders DSL files into PNG files using a specific format
     Render {
         /// A format that Structurizr-CLI supports
         #[arg(short, long, value_enum, default_value_t = Formatters::PlantUML)]
