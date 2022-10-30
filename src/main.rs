@@ -25,7 +25,7 @@ enum Commands {
         #[arg(short, long)]
         output: Option<PathBuf>,
     },
-    /// The render command renders PlantUML files into PNG files using PlantUML CLI
+    /// The render command renders DSL files into PNG files using a specific formatter
     Render {
         /// Format that Structurizr-CLI supports
         #[arg(short, long)]
