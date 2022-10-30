@@ -13,15 +13,15 @@ struct Cli {
 enum Commands {
     /// The export command exports DSL files into PlantUML files using Structurizr-CLI
     Export {
-        /// Input file path for DSL files
+        /// A file path for DSL files to be read from
         #[arg(short, long)]
-        workspace: Option<PathBuf>,
+        workspace: PathBuf,
 
         /// Format that Structurizr-CLI supports
         #[arg(short, long)]
         formatter: String,
 
-        /// Output file path for PlantUML files
+        /// A file path for PlantUML files to be exported to
         #[arg(short, long)]
         output: Option<PathBuf>,
     },
@@ -33,7 +33,7 @@ enum Commands {
 
         /// Input file path for files
         #[arg(short, long)]
-        input: Option<PathBuf>,
+        input: PathBuf,
     },
 }
 
