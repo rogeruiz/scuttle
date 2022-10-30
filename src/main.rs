@@ -25,7 +25,7 @@ enum Formatters {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// The export command exports DSL files into PlantUML files using Structurizr-CLI
+    /// The export command exports DSL files into specified formatted files using Structurizr-CLI
     Export {
         /// A file path for DSL files to be read from
         #[arg(short, long)]
