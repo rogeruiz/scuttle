@@ -136,7 +136,12 @@ name = "scuttle"
 version = "2.0.0"
 dependencies = [
  "clap",
+ "scuttle_export",
 ]
+
+[[package]]
+name = "scuttle_export"
+version = "0.1.0"
 
 [[package]]
 name = "strsim"

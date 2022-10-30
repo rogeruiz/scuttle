@@ -2,6 +2,8 @@ use std::path::PathBuf;
 
 use clap::{Parser, Subcommand, ValueEnum};
 
+use scuttle_export;
+
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
@@ -60,7 +62,10 @@ fn main() {
             formatter,
             output,
         }) => {
-            todo!()
+            println!("The workspace is {:?}", workspace.to_str());
+            println!("The formatter is {:?}", formatter.to_possible_value());
+            let answer = scuttle_export::add(2, 2);
+            println!("answer for 2+2 is: {}", answer);
         }
         Some(Commands::Render { input, formatter }) => {
             todo!()

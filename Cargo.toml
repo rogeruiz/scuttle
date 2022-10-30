@@ -19,3 +19,5 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.0.18", features = ["derive"] }
+
+scuttle_export = { path = "scuttle_export" }
