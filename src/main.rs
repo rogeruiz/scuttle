@@ -1,12 +1,26 @@
 use std::path::PathBuf;
 
-use clap::{Parser, Subcommand};
+use clap::{Parser, Subcommand, ValueEnum};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
     #[command(subcommand)]
     command: Option<Commands>,
+}
+
+#[derive(Copy, Clone, PartialEq, Eq, ValueEnum)]
+enum Formatters {
+    PlantUML,
+    PlantUMLStructurizr,
+    PlantUMLC4,
+    Mermaid,
+    WebSequence,
+    Ilograph,
+    DOT,
+    JSON,
+    DSL,
+    Theme,
 }
 
 #[derive(Subcommand)]
@@ -17,9 +31,9 @@ enum Commands {
         #[arg(short, long)]
         workspace: PathBuf,
 
-        /// Format that Structurizr-CLI supports
-        #[arg(short, long)]
-        formatter: String,
+        /// A format that Structurizr-CLI supports
+        #[arg(short, long, value_enum)]
+        formatter: Formatters,
 
         /// A file path for PlantUML files to be exported to
         #[arg(short, long)]
@@ -27,9 +41,9 @@ enum Commands {
     },
     /// The render command renders DSL files into PNG files using a specific formatter
     Render {
-        /// Format that Structurizr-CLI supports
-        #[arg(short, long)]
-        formatter: String,
+        /// A format that Structurizr-CLI supports
+        #[arg(short, long, value_enum)]
+        formatter: Formatters,
 
         /// Input file path for files
         #[arg(short, long)]
