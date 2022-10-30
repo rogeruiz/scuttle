@@ -31,9 +31,10 @@ and spit out very simple Structurizr DSL files which can then be maintained
 after creation to bootstrap the process of mass adoption of C4 model system
 diagrams and the Structurizr services such as SaaS and CLI tooling.
 
-- 🔗 [Structurizr DSL files](https://github.com/structurizr/dsl#reference)
 - 🔗 [The C4 model for visualising software architecture](https://c4model.com/)
 - 🔗 [Structurizr Cloud service](https://structurizr.com/pricing)
+- 🔗 [Structurizr DSL files](https://github.com/structurizr/dsl#reference)
+- 🔗 [Structurizr DSL language reference](https://github.com/structurizr/dsl/blob/master/docs/language-reference.md)
 
 ## Contributing
 
