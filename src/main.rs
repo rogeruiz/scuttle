@@ -32,7 +32,7 @@ enum Commands {
         workspace: PathBuf,
 
         /// A format that Structurizr-CLI supports
-        #[arg(short, long, value_enum)]
+        #[arg(short, long, value_enum, default_value_t = Formatters::PlantUML)]
         formatter: Formatters,
 
         /// A file path for PlantUML files to be exported to
@@ -42,7 +42,7 @@ enum Commands {
     /// The render command renders DSL files into PNG files using a specific formatter
     Render {
         /// A format that Structurizr-CLI supports
-        #[arg(short, long, value_enum)]
+        #[arg(short, long, value_enum, default_value_t = Formatters::PlantUML)]
         formatter: Formatters,
 
         /// Input file path for files
