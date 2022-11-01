@@ -62,10 +62,10 @@ fn main() {
             formatter,
             output,
         }) => {
-            println!("The workspace is {:?}", workspace.to_str());
+            println!("The workspace is {:?}", workspace.as_path());
             println!("The formatter is {:?}", formatter.to_possible_value());
-            let answer = scuttle_export::add(2, 2);
-            println!("answer for 2+2 is: {}", answer);
+            println!("The output is {:?}", output.unwrap_or(PathBuf::from(".")));
+            scuttle_export::export();
         }
         Some(Commands::Render { input, formatter }) => {
             todo!()
