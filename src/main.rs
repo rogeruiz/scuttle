@@ -2,7 +2,7 @@ mod constants;
 mod export;
 
 use crate::constants::structurizr;
-use crate::export::command;
+use crate::export::command::run_export;
 
 use std::path::PathBuf;
 
@@ -52,8 +52,7 @@ fn main() {
             format,
             output,
         }) => {
-            // scuttle_export::run_docker(workspace, format, output);
-            export::command::run_docker();
+            run_export();
         }
         Some(Commands::Render { input, format }) => {
             todo!()

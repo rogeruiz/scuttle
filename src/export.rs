@@ -6,6 +6,7 @@ pub mod command {
     // use std::path::PathBuf;
 
     use bollard::container::{Config, RemoveContainerOptions};
+    use bollard::exec::StartExecOptions;
     use bollard::models::HostConfig;
     use bollard::Docker;
 
@@ -17,10 +18,8 @@ pub mod command {
     const IMAGE: &str = "structurizr/cli:latest";
 
     #[tokio::main]
-    pub async fn run_docker(// workspace: PathBuf,
-        // format: structurizr::Formatters,
-    ) -> Result<(), Box<dyn std::error::Error + 'static>> {
-        let docker = Docker::connect_with_socket_defaults().unwrap();
+    pub async fn run_export() -> Result<(), Box<dyn std::error::Error + 'static>> {
+        let docker = Docker::connect_with_local_defaults().unwrap();
 
         docker
             .create_image(
