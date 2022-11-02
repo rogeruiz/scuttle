@@ -1,28 +1,18 @@
+mod constants;
+mod export;
+
+use crate::constants::structurizr;
+use crate::export::command;
+
 use std::path::PathBuf;
 
-use clap::{Parser, Subcommand, ValueEnum};
-
-use scuttle_export;
+use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
     #[command(subcommand)]
     command: Option<Commands>,
-}
-
-#[derive(Copy, Clone, PartialEq, Eq, ValueEnum)]
-enum Formatters {
-    PlantUML,
-    PlantUMLStructurizr,
-    PlantUMLC4,
-    Mermaid,
-    WebSequence,
-    Ilograph,
-    DOT,
-    JSON,
-    DSL,
-    Theme,
 }
 
 #[derive(Subcommand)]
@@ -34,8 +24,8 @@ enum Commands {
         workspace: PathBuf,
 
         /// A format that Structurizr-CLI supports
-        #[arg(short, long, value_enum, default_value_t = Formatters::PlantUML)]
-        formatter: Formatters,
+        #[arg(short, long, value_enum, default_value_t = structurizr::Formatters::PlantUML)]
+        format: structurizr::Formatters,
 
         /// A file path for PlantUML files to be exported to
         #[arg(short, long)]
@@ -44,8 +34,8 @@ enum Commands {
     /// The render command renders DSL files into PNG files using a specific format
     Render {
         /// A format that Structurizr-CLI supports
-        #[arg(short, long, value_enum, default_value_t = Formatters::PlantUML)]
-        formatter: Formatters,
+        #[arg(short, long, value_enum, default_value_t = structurizr::Formatters::PlantUML)]
+        format: structurizr::Formatters,
 
         /// Input file path for files
         #[arg(short, long)]
@@ -59,15 +49,13 @@ fn main() {
     match cli.command {
         Some(Commands::Export {
             workspace,
-            formatter,
+            format,
             output,
         }) => {
-            println!("The workspace is {:?}", workspace.as_path());
-            println!("The formatter is {:?}", formatter.to_possible_value());
-            println!("The output is {:?}", output.unwrap_or(PathBuf::from(".")));
-            scuttle_export::export();
+            // scuttle_export::run_docker(workspace, format, output);
+            export::command::run_docker();
         }
-        Some(Commands::Render { input, formatter }) => {
+        Some(Commands::Render { input, format }) => {
             todo!()
         }
         None => {}
