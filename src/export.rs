@@ -3,25 +3,30 @@
 
 pub mod command {
 
-    // use std::path::PathBuf;
-
-    use bollard::container::{Config, RemoveContainerOptions};
-    use bollard::exec::StartExecOptions;
-    use bollard::models::HostConfig;
+    use bollard::container::{
+        Config, CreateContainerOptions, LogsOptions, RemoveContainerOptions, StartContainerOptions,
+    };
+    use bollard::image::CreateImageOptions;
     use bollard::Docker;
 
-    use bollard::exec::{CreateExecOptions, StartExecResults};
-    use bollard::image::CreateImageOptions;
     use futures_util::stream::StreamExt;
-    use futures_util::TryStreamExt;
+    use futures_util::stream::TryStreamExt;
 
     const IMAGE: &str = "structurizr/cli:latest";
 
     #[tokio::main]
     pub async fn run_export() -> Result<(), Box<dyn std::error::Error + 'static>> {
-        let docker = Docker::connect_with_local_defaults().unwrap();
+        let docker = Docker::connect_with_socket_defaults().unwrap();
 
-        docker
+        let sd1 = docker.clone();
+
+        let structurizr_config = Config {
+            image: Some(IMAGE),
+            cmd: Some(vec!["structurizr.sh"]),
+            ..Default::default()
+        };
+
+        let _ = &docker
             .create_image(
                 Some(CreateImageOptions {
                     from_image: IMAGE,
@@ -33,43 +38,32 @@ pub mod command {
             .try_collect::<Vec<_>>()
             .await?;
 
-        let cli_config = Config {
-            image: Some(IMAGE),
-            tty: Some(true),
-            host_config: Some(HostConfig {
-                auto_remove: Some(true),
-                ..Default::default()
-            }),
-            ..Default::default()
-        };
-
-        let id = docker
-            .create_container::<&str, &str>(None, cli_config)
-            .await?
-            .id;
-        docker.start_container::<String>(&id, None).await?;
-
-        // non interactive
-        let exec = docker
-            .create_exec(
-                &id,
-                CreateExecOptions {
-                    attach_stdout: Some(true),
-                    attach_stderr: Some(true),
-                    cmd: Some(vec!["structurizr.sh", ""]),
-                    ..Default::default()
-                },
+        let id = &docker
+            .create_container(
+                Some(CreateContainerOptions {
+                    name: "structurizr",
+                }),
+                structurizr_config,
             )
             .await?
             .id;
-        if let StartExecResults::Attached { mut output, .. } =
-            docker.start_exec(&exec, None).await?
-        {
-            while let Some(Ok(msg)) = output.next().await {
-                print!("{}", msg);
-            }
-        } else {
-            unreachable!();
+
+        let _ = &docker
+            .start_container("structurizr", None::<StartContainerOptions<String>>)
+            .await?;
+
+        let mut stream = sd1.logs::<String>(
+            "structurizr",
+            Some(LogsOptions {
+                follow: true,
+                stdout: true,
+                stderr: false,
+                ..Default::default()
+            }),
+        );
+
+        while let Some(msg) = stream.next().await {
+            println!("Message: {:#?}", msg);
         }
 
         docker
