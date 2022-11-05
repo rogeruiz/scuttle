@@ -52,7 +52,7 @@ fn main() {
             format,
             output,
         }) => {
-            run_export();
+            run_export().ok();
         }
         Some(Commands::Render { input, format }) => {
             todo!()
