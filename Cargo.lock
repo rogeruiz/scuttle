@@ -566,6 +566,7 @@ dependencies = [
  "clap",
  "futures-util",
  "tokio",
+ "zzz",
 ]
 
 [[package]]
@@ -682,6 +683,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
+]
+
+[[package]]
+name = "term_size"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1e4129646ca0ed8f45d09b929036bafad5377103edd06e50bf574b353d2b08d9"
+dependencies = [
+ "libc",
+ "winapi",
 ]
 
 [[package]]
@@ -946,3 +957,13 @@ name = "windows_x86_64_msvc"
 version = "0.42.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f40009d85759725a34da6d89a94e63d7bdc50a862acf0dbc7c8e488f1edcb6f5"
+
+[[package]]
+name = "zzz"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8ba63ef3620132b6a9cacdc3d643ac08f26b5f31fb321f4cb8d69569ed43347c"
+dependencies = [
+ "futures-core",
+ "term_size",
+]

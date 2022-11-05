@@ -9,6 +9,8 @@ pub mod command {
     use bollard::image::CreateImageOptions;
     use bollard::Docker;
 
+    use zzz::prelude::*;
+
     use futures_util::stream::StreamExt;
     use futures_util::stream::TryStreamExt;
 
@@ -35,6 +37,7 @@ pub mod command {
                 None,
                 None,
             )
+            .progress()
             .try_collect::<Vec<_>>()
             .await?;
 
