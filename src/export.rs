@@ -18,16 +18,19 @@ pub mod command {
 
     #[tokio::main]
     pub async fn run_export() -> Result<(), Box<dyn std::error::Error + 'static>> {
+        // Connecting to Docker via default socket
         let docker = Docker::connect_with_socket_defaults().unwrap();
 
         let sd1 = docker.clone();
 
+        // Create the Structurizr-CLI Docker configuration
         let structurizr_config = Config {
             image: Some(IMAGE),
             cmd: Some(vec!["structurizr.sh"]),
             ..Default::default()
         };
 
+        // Create the Image and show a progress bar
         let _ = &docker
             .create_image(
                 Some(CreateImageOptions {
@@ -41,6 +44,7 @@ pub mod command {
             .try_collect::<Vec<_>>()
             .await?;
 
+        // Create the container
         let id = &docker
             .create_container(
                 Some(CreateContainerOptions {
@@ -51,6 +55,7 @@ pub mod command {
             .await?
             .id;
 
+        // Start the container
         let _ = &docker
             .start_container("structurizr", None::<StartContainerOptions<String>>)
             .await?;
@@ -65,10 +70,12 @@ pub mod command {
             }),
         );
 
+        // Since the stream is
         while let Some(msg) = stream.next().await {
             println!("Message: {:#?}", msg);
         }
 
+        // Let's remove the container since we're done here.
         docker
             .remove_container(
                 &id,
@@ -79,6 +86,8 @@ pub mod command {
             )
             .await?;
 
+        // TODO: Learn what this is doing here so I can better handle error handling when something
+        // doesn't work the way I think it will.
         Ok(())
     }
 }
