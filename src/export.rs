@@ -21,7 +21,7 @@ pub mod command {
     #[tokio::main]
     pub async fn run_export(
         format: &str,
-        workspace: PathBuf,
+        workspace: &str,
         output: PathBuf,
     ) -> Result<(), Box<dyn std::error::Error + 'static>> {
         // Connecting to Docker via default socket
@@ -55,7 +55,7 @@ pub mod command {
                 "-f",
                 &format,
                 "-w",
-                &workspace.to_str().unwrap(),
+                &workspace,
                 "-o",
                 &output.to_str().unwrap(),
             ]),

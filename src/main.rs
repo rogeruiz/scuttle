@@ -1,7 +1,9 @@
 mod constants;
 mod export;
 
+use std::io::{Error, ErrorKind};
 use std::path::PathBuf;
+use std::process;
 
 use crate::constants::structurizr;
 use crate::export::command::run_export;
@@ -43,6 +45,11 @@ enum Commands {
     },
 }
 
+fn exit_on_error(error: std::io::Error) {
+    println!("{:#?}", error);
+    process::exit(1);
+}
+
 fn main() {
     let cli = Cli::parse();
 
@@ -52,8 +59,28 @@ fn main() {
             format,
             output,
         }) => {
-            let f;
-            // Get the workspace and send it as a String
+            // Check to see if the workspace is pointing to a file and a DSL file at that.
+            let mut valid_workspace: &str = "";
+            match workspace.is_file() {
+                true => match workspace.extension() {
+                    None => {
+                        unreachable!();
+                    }
+                    Some(ext) => {
+                        if "dsl" != ext {
+                            exit_on_error(Error::new(
+                                ErrorKind::Other,
+                                "ay ay ay, no es un archivo con extension de .dsl",
+                            ))
+                        }
+                        valid_workspace = workspace.to_str().unwrap();
+                    }
+                },
+                false => exit_on_error(Error::new(
+                    ErrorKind::NotFound,
+                    "ay ay ay, no es un archivo",
+                )),
+            }
 
             // Get the format and send it as a String
             match format {
@@ -63,9 +90,7 @@ fn main() {
                 structurizr::Formatters::Mermaid => f = "mermaid",
             }
 
-            // If the output is not set then set it to the current directory
-
-            run_export(f, workspace, output).ok();
+            run_export(valid_format, valid_workspace, output).ok();
         }
         Some(Commands::Render { input, format }) => {
             assert_eq!(input, input);
