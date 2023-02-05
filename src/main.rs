@@ -68,6 +68,8 @@ fn main() {
             run_export(f, workspace, output).ok();
         }
         Some(Commands::Render { input, format }) => {
+            assert_eq!(input, input);
+            assert_eq!(format, format);
             todo!()
         }
         None => {}
