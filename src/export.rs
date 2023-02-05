@@ -1,36 +1,72 @@
-// mod constants;
-// use crate::constants::structurizr;
-
 pub mod command {
+
+    use terminal_spinners::{SpinnerBuilder, DOTS8_BIT};
 
     use bollard::container::{
         Config, CreateContainerOptions, LogsOptions, RemoveContainerOptions, StartContainerOptions,
     };
     use bollard::image::CreateImageOptions;
+    use bollard::models::{HostConfig, Mount};
     use bollard::Docker;
-
-    use zzz::prelude::*;
 
     use futures_util::stream::StreamExt;
     use futures_util::stream::TryStreamExt;
 
     const IMAGE: &str = "structurizr/cli:latest";
 
+    use std::io::Write;
+    use std::path::PathBuf;
+    use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
+
     #[tokio::main]
-    pub async fn run_export() -> Result<(), Box<dyn std::error::Error + 'static>> {
+    pub async fn run_export(
+        format: &str,
+        workspace: PathBuf,
+        output: PathBuf,
+    ) -> Result<(), Box<dyn std::error::Error + 'static>> {
         // Connecting to Docker via default socket
         let docker = Docker::connect_with_socket_defaults().unwrap();
 
         let sd1 = docker.clone();
 
+        let mut stdout = StandardStream::stdout(ColorChoice::Always);
+
         // Create the Structurizr-CLI Docker configuration
         let structurizr_config = Config {
             image: Some(IMAGE),
-            cmd: Some(vec!["structurizr.sh"]),
+            host_config: Some(HostConfig {
+                mounts: Some(vec![Mount {
+                    target: Some("/usr/local/structurizr".to_string()),
+                    source: Some(
+                        std::env::current_dir()
+                            .unwrap()
+                            .into_os_string()
+                            .into_string()
+                            .unwrap(),
+                    ),
+                    typ: Some(bollard::service::MountTypeEnum::BIND),
+                    ..Default::default()
+                }]),
+                // binds: Some(vec!["$PWD:/usr/local/structurizr".to_string()]),
+                ..Default::default()
+            }),
+            cmd: Some(vec![
+                "export",
+                "-f",
+                &format,
+                "-w",
+                &workspace.to_str().unwrap(),
+                "-o",
+                &output.to_str().unwrap(),
+            ]),
             ..Default::default()
         };
 
-        // Create the Image and show a progress bar
+        let running_export = SpinnerBuilder::new()
+            .spinner(&DOTS8_BIT)
+            .text(" Running the structurizr/cli in Docker")
+            .start();
+
         let _ = &docker
             .create_image(
                 Some(CreateImageOptions {
@@ -40,7 +76,6 @@ pub mod command {
                 None,
                 None,
             )
-            .progress()
             .try_collect::<Vec<_>>()
             .await?;
 
@@ -60,6 +95,8 @@ pub mod command {
             .start_container("structurizr", None::<StartContainerOptions<String>>)
             .await?;
 
+        running_export.done();
+
         let mut stream = sd1.logs::<String>(
             "structurizr",
             Some(LogsOptions {
@@ -72,7 +109,16 @@ pub mod command {
 
         // Since the stream is
         while let Some(msg) = stream.next().await {
-            println!("Message: {:#?}", msg);
+            match msg {
+                Ok(m) => {
+                    stdout.set_color(ColorSpec::new().set_fg(Some(Color::White)))?;
+                    writeln!(&mut stdout, "{}", m).ok();
+                }
+                Err(m) => {
+                    stdout.set_color(ColorSpec::new().set_fg(Some(Color::Red)))?;
+                    writeln!(&mut stdout, "{}", m).ok();
+                }
+            }
         }
 
         // Let's remove the container since we're done here.

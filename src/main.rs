@@ -52,7 +52,20 @@ fn main() {
             format,
             output,
         }) => {
-            run_export().ok();
+            let f;
+            // Get the workspace and send it as a String
+
+            // Get the format and send it as a String
+            match format {
+                structurizr::Formatters::PlantUML => {
+                    f = "plantuml";
+                }
+                structurizr::Formatters::Mermaid => f = "mermaid",
+            }
+
+            // If the output is not set then set it to the current directory
+
+            run_export(f, workspace, output).ok();
         }
         Some(Commands::Render { input, format }) => {
             todo!()
