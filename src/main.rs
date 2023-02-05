@@ -71,7 +71,7 @@ fn main() {
                     Some(ext) => {
                         if "dsl" != ext {
                             exit_on_error(Error::new(
-                                ErrorKind::Other,
+                                ErrorKind::Unsupported,
                                 "ay ay ay, no es un archivo con extension de .dsl",
                             ))
                         }
