@@ -82,12 +82,12 @@ fn main() {
                 )),
             }
 
-            // Get the format and send it as a String
+            // Check for valid format according to our structurizr::Formatters and match them to
+            // what the Structurizr-CLI supports as a format.
+            let valid_format: &str;
             match format {
-                structurizr::Formatters::PlantUML => {
-                    f = "plantuml";
-                }
-                structurizr::Formatters::Mermaid => f = "mermaid",
+                structurizr::Formatters::PlantUML => valid_format = "plantuml",
+                structurizr::Formatters::Mermaid => valid_format = "mermaid",
             }
 
             run_export(valid_format, valid_workspace, output).ok();
