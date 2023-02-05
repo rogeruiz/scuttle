@@ -1,11 +1,10 @@
 mod constants;
 mod export;
 
-use std::io::{Error, ErrorKind};
 use std::path::PathBuf;
 use std::process;
 
-// use anyhow::Result;
+use anyhow::anyhow;
 
 use crate::constants::structurizr;
 use crate::export::command::run_export;
@@ -47,8 +46,8 @@ enum Commands {
     },
 }
 
-fn exit_on_error(error: std::io::Error) {
-    println!("{:#?}", error);
+fn exit_on_error(error: anyhow::Error) {
+    println!("{}", error);
     process::exit(1);
 }
 
@@ -70,18 +69,12 @@ fn main() {
                     }
                     Some(ext) => {
                         if "dsl" != ext {
-                            exit_on_error(Error::new(
-                                ErrorKind::Unsupported,
-                                "ay ay ay, no es un archivo con extension de .dsl",
-                            ))
+                            exit_on_error(anyhow!("The extension .dsl is the only supported extension, you provided {:?}", ext))
                         }
                         valid_workspace = workspace.to_str().unwrap();
                     }
                 },
-                false => exit_on_error(Error::new(
-                    ErrorKind::NotFound,
-                    "ay ay ay, no es un archivo",
-                )),
+                false => exit_on_error(anyhow!("The workspace is not a file: {:?}", workspace)),
             }
 
             // Check for valid format according to our structurizr::Formatters and match them to
