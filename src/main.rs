@@ -5,6 +5,8 @@ use std::io::{Error, ErrorKind};
 use std::path::PathBuf;
 use std::process;
 
+// use anyhow::Result;
+
 use crate::constants::structurizr;
 use crate::export::command::run_export;
 
