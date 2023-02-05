@@ -1,10 +1,10 @@
 mod constants;
 mod export;
 
+use std::path::PathBuf;
+
 use crate::constants::structurizr;
 use crate::export::command::run_export;
-
-use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};
 
@@ -28,8 +28,8 @@ enum Commands {
         format: structurizr::Formatters,
 
         /// A file path for PlantUML files to be exported to
-        #[arg(short, long)]
-        output: Option<PathBuf>,
+        #[arg(short, long, default_value = "out")]
+        output: PathBuf,
     },
     /// The render command renders DSL files into PNG files using a specific format
     Render {
