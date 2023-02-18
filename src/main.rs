@@ -4,6 +4,9 @@ mod export;
 use std::path::PathBuf;
 use std::process;
 
+use std::io::Write;
+use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
+
 use anyhow::anyhow;
 
 use crate::constants::structurizr;
@@ -47,7 +50,13 @@ enum Commands {
 }
 
 fn exit_on_error(error: anyhow::Error) {
-    println!("{}", error);
+    let mut output_stream = StandardStream::stdout(ColorChoice::Always);
+    match output_stream.set_color(ColorSpec::new().set_fg(Some(Color::Red))) {
+        Ok(_) => {
+            writeln!(&mut output_stream, "Error: {}", error).unwrap();
+        }
+        Err(_) => unreachable!(),
+    }
     process::exit(1);
 }
 
