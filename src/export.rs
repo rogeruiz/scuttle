@@ -3,7 +3,8 @@ pub mod command {
     use terminal_spinners::{SpinnerBuilder, DOTS8_BIT};
 
     use bollard::container::{
-        Config, CreateContainerOptions, LogsOptions, RemoveContainerOptions, StartContainerOptions,
+        Config, CreateContainerOptions, LogOutput, LogsOptions, RemoveContainerOptions,
+        StartContainerOptions,
     };
     use bollard::image::CreateImageOptions;
     use bollard::models::{HostConfig, Mount};
@@ -59,6 +60,7 @@ pub mod command {
                 "-o",
                 &output.to_str().unwrap(),
             ]),
+            tty: Some(false),
             ..Default::default()
         };
 
@@ -102,7 +104,7 @@ pub mod command {
             Some(LogsOptions {
                 follow: true,
                 stdout: true,
-                stderr: false,
+                stderr: true,
                 ..Default::default()
             }),
         );
@@ -110,14 +112,20 @@ pub mod command {
         // Since the stream is
         while let Some(msg) = stream.next().await {
             match msg {
-                Ok(m) => {
-                    stdout.set_color(ColorSpec::new().set_fg(Some(Color::White)))?;
-                    writeln!(&mut stdout, "{}", m).ok();
+                Ok(output) => {
+                    let mut output_stream = StandardStream::stdout(ColorChoice::Always);
+                    match output {
+                        LogOutput::StdOut { .. } => {
+                            output_stream.set_color(ColorSpec::new().set_fg(Some(Color::Green)))?;
+                        }
+                        LogOutput::StdErr { .. } => {
+                            output_stream.set_color(ColorSpec::new().set_fg(Some(Color::Red)))?;
+                        }
+                        _ => (),
+                    }
+                    writeln!(&mut output_stream, "{}", output).ok();
                 }
-                Err(m) => {
-                    stdout.set_color(ColorSpec::new().set_fg(Some(Color::Red)))?;
-                    writeln!(&mut stdout, "{}", m).ok();
-                }
+                Err(_) => unreachable!(),
             }
         }
 
