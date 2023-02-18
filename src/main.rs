@@ -69,12 +69,14 @@ fn main() {
                     }
                     Some(ext) => {
                         if "dsl" != ext {
-                            exit_on_error(anyhow!("The extension .dsl is the only supported extension, you provided {:?}", ext))
+                            exit_on_error(anyhow!(
+                                "The workspace must be a Structurizr DSL file: {:?}\nPlease use the .dsl extension when selecting a workspace.",
+                            ext))
                         }
                         valid_workspace = workspace.to_str().unwrap();
                     }
                 },
-                false => exit_on_error(anyhow!("The workspace is not a file: {:?}", workspace)),
+                false => exit_on_error(anyhow!("The workspace must be a file: {:?}", workspace)),
             }
 
             // Check for valid format according to our structurizr::Formatters and match them to
