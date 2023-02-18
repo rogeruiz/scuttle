@@ -1,6 +1,6 @@
 pub mod command {
 
-    use terminal_spinners::{SpinnerBuilder, DOTS8_BIT};
+    use terminal_spinners::{SpinnerBuilder, DOTS4};
 
     use bollard::container::{
         Config, CreateContainerOptions, LogOutput, LogsOptions, RemoveContainerOptions,
@@ -65,8 +65,8 @@ pub mod command {
         };
 
         let running_export = SpinnerBuilder::new()
-            .spinner(&DOTS8_BIT)
-            .text(" Running the structurizr/cli in Docker")
+            .spinner(&DOTS4)
+            .text(" Starting the structurizr/cli (via Docker)")
             .start();
 
         let _ = &docker
