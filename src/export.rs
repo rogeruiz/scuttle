@@ -30,11 +30,12 @@ pub mod command {
 
         let sd1 = docker.clone();
 
-        let mut stdout = StandardStream::stdout(ColorChoice::Always);
-
         // Create the Structurizr-CLI Docker configuration
         let structurizr_config = Config {
             image: Some(IMAGE),
+            // The host_config property was the only way I was able to ensure I could mount the
+            // local current working directory to where the Structurizr-CLI image expects the
+            // working directory to be.
             host_config: Some(HostConfig {
                 mounts: Some(vec![Mount {
                     target: Some("/usr/local/structurizr".to_string()),
