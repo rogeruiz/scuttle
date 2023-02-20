@@ -90,11 +90,10 @@ fn main() {
 
             // Check for valid format according to our structurizr::Formatters and match them to
             // what the Structurizr-CLI supports as a format.
-            let valid_format: &str;
-            match format {
-                structurizr::Formatters::PlantUML => valid_format = "plantuml",
-                structurizr::Formatters::Mermaid => valid_format = "mermaid",
-            }
+            let valid_format: &str = match format {
+                structurizr::Formatters::PlantUML => "plantuml",
+                structurizr::Formatters::Mermaid => "mermaid",
+            };
 
             // Check to see if the output directory is a valid path and create it if it does not
             // exist.
