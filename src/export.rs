@@ -16,14 +16,13 @@ pub mod command {
     const IMAGE: &str = "structurizr/cli:latest";
 
     use std::io::Write;
-    use std::path::PathBuf;
     use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
     #[tokio::main]
     pub async fn run_export(
         format: &str,
         workspace: &str,
-        output: PathBuf,
+        output: &str,
     ) -> Result<(), Box<dyn std::error::Error + 'static>> {
         // Connecting to Docker via default socket
         let docker = Docker::connect_with_socket_defaults().unwrap();
@@ -53,13 +52,7 @@ pub mod command {
                 ..Default::default()
             }),
             cmd: Some(vec![
-                "export",
-                "-f",
-                &format,
-                "-w",
-                &workspace,
-                "-o",
-                &output.to_str().unwrap(),
+                "export", "-f", &format, "-w", &workspace, "-o", &output,
             ]),
             tty: Some(false),
             ..Default::default()

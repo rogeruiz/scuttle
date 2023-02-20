@@ -1,8 +1,8 @@
 mod constants;
 mod export;
 
-use std::path::PathBuf;
 use std::process;
+use std::{fs, path::PathBuf};
 
 use std::io::Write;
 use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
@@ -96,7 +96,30 @@ fn main() {
                 structurizr::Formatters::Mermaid => valid_format = "mermaid",
             }
 
-            run_export(valid_format, valid_workspace, output).ok();
+            // Check to see if the output directory is a valid path and create it if it does not
+            // exist.
+            let mut valid_output: &str = "";
+            // We start here to check if the output PathBuf is a directory. If it is, we're good
+            // and we return path as a &str. And if it's false (not a directory), then we try to
+            // use fs::create_dir_all with the a reference to `output`. And if that successfully
+            // gets created, then we'll return the path as a &str again. If any of this fails, then
+            // we'll exit and say that the directory could not be created at all.
+            match output.is_dir() {
+                true => {
+                    valid_output = output.to_str().unwrap();
+                }
+                false => match fs::create_dir_all(&output) {
+                    Ok(_) => {
+                        valid_output = output.to_str().unwrap();
+                    }
+                    Err(_) => exit_on_error(anyhow!(
+                        "The output directory could not be created!: {:?}",
+                        output
+                    )),
+                },
+            };
+
+            run_export(valid_format, valid_workspace, valid_output).ok();
         }
         Some(Commands::Render { input, format }) => {
             assert_eq!(input, input);
