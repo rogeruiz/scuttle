@@ -1,3 +1,7 @@
+//! Welcome to Scuttle-CLI. The goal of this tool is to use the Scuttle to help the ergnomics of
+//! sing Structurizr-CLI and PlantUML. Your mileage may vary with this tool. It's also required
+//! that Docker be installed and running in order to use this tool effectively.
+
 mod constants;
 mod export;
 
